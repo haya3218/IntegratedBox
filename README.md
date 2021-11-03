@@ -5,11 +5,11 @@ Its a physics-dashing-momentum based platfomer basically.
 
 **THIS IS STILL A WORK IN PROGRESS! DON'T EXPECT THINGS TO BE _FULLY_ DONE!**
 
-_You're a box. Your only objective is to get to the haha funny black box and get through series of levels.
+_You're a box. Your only objective is to get to the haha funny black box and get through series of levels._
 
-There's nothing much you can do about it. Hey, at least you can move._
+_There's nothing much you can do about it. Hey, at least you can move._
 
-___This game sucks____
+___This game sucks___
 
 - IGN 0/10
 
