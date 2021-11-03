@@ -19,5 +19,5 @@ func _physics_process(delta):
 				deathsound.play()
 			globals.player_died = true
 			var left = Vector2(-2, 0)
-			Transitions.slide_rect2(self, '', 2, Color.black, left)
+			Transitions.slide_rect2(self, '', 2.5, Color.black, left)
 	pass

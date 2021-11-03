@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://Objects/Tiles.tres" type="TileSet" id=1]
 [ext_resource path="res://Objects/Player.tscn" type="PackedScene" id=2]
@@ -12,29 +12,23 @@
 [ext_resource path="res://Sprites/tutorial/6.png" type="Texture" id=10]
 [ext_resource path="res://Sprites/tutorial/troll1.png" type="Texture" id=11]
 [ext_resource path="res://Objects/Finish.tscn" type="PackedScene" id=12]
+[ext_resource path="res://Objects/Layer.tscn" type="PackedScene" id=13]
+[ext_resource path="res://Sprites/tutorial/troll2.png" type="Texture" id=14]
+[ext_resource path="res://Objects/Spike.tscn" type="PackedScene" id=15]
 
 [node name="Level" type="Node2D"]
 
 [node name="Player" parent="." instance=ExtResource( 2 )]
-position = Vector2( 480, 320 )
+position = Vector2( 480, 288 )
 
 [node name="Area2D" parent="." instance=ExtResource( 3 )]
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
-
-[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer"]
-margin_right = 288.0
-margin_bottom = 40.0
-bbcode_enabled = true
-bbcode_text = "DEBUG BUILD
-"
-text = "DEBUG BUILD
-"
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="CanvasLayer" parent="." instance=ExtResource( 13 )]
 
 [node name="Rigid Objects" type="Node2D" parent="."]
+
+[node name="Area2D" parent="Rigid Objects" instance=ExtResource( 15 )]
+position = Vector2( 1120, 320 )
 
 [node name="TileMap" type="TileMap" parent="."]
 tile_set = ExtResource( 1 )
@@ -79,6 +73,10 @@ texture = ExtResource( 10 )
 [node name="troll2" type="Sprite" parent="Tutorial"]
 position = Vector2( 3840, -640 )
 texture = ExtResource( 11 )
+
+[node name="troll3" type="Sprite" parent="Tutorial"]
+position = Vector2( 576, -224 )
+texture = ExtResource( 14 )
 
 [node name="Area2D2" parent="." instance=ExtResource( 12 )]
 position = Vector2( 4192, -1248 )

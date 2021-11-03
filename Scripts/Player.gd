@@ -28,6 +28,8 @@ var is_crouching = false
 var discord: Discord.Core
 var activities: Discord.ActivityManager
 
+var finish = preload("res://Objects/Finish.tscn")
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	get_tree().set_auto_accept_quit(false)
@@ -37,7 +39,7 @@ func _ready():
 	globals.player_died = false
 	globals.game_finished = false
 	$DicordTimer.connect("timeout",self,"discord_integ")
-	$DicordTimer.start(0.2)
+	$DicordTimer.start(0.5)
 	pass # Replace with function body.
 	
 func dash_timer_timeout():
@@ -75,12 +77,15 @@ func _update_activity_callback(result: int) -> void:
 	if globals.game_started and discord != null:
 		if result != Discord.Result.OK:
 			print("Failed to update activity: ", result)
-			get_tree().quit()
 			return
 
 		print("Updated activity!")
 	
 func _process(delta):
+	if Input.is_action_just_pressed("debug"):
+		var f = finish.instance()
+		f.position = position + 100 * Vector2.UP
+		get_parent().add_child(f)
 	if discord != null and not globals.player_died:
 		var result: int = discord.run_callbacks()
 		if result != Discord.Result.OK:
@@ -109,13 +114,13 @@ func _physics_process(delta):
 	
 	# Movement.
 	if Input.is_action_pressed('ui_right'):
-		if not globals.player_died or not globals.game_finished:
+		if not globals.player_died:
 			dir = 1
 			velocity.x = max(velocity.x+ACCELERATION, MAX_SPEED)
 		else:
 			velocity.x = 0
 	elif Input.is_action_pressed('ui_left'):
-		if not globals.player_died or not globals.game_finished:
+		if not globals.player_died:
 			dir = -1
 			velocity.x = min(velocity.x-ACCELERATION, -MAX_SPEED)
 		else:
@@ -140,10 +145,10 @@ func _physics_process(delta):
 		is_crouching = false
 		
 	var collision = test_move(transform, velocity * delta)
-	if floor_check(delta):
+	if floor_check(delta) and not globals.player_died:
 		can_dash = true
 		
-	if floor_check(delta):
+	if floor_check(delta) and not globals.player_died:
 		var current_rotate = modulo(rad2deg($Sprite/SpriteChild.rotation), 360)
 		var current_right_rotate = modulo(current_rotate, 90)
 

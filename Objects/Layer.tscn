@@ -1,0 +1,34 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Objects/ScoreFont.tres" type="BitmapFont" id=1]
+[ext_resource path="res://Scripts/Timer.gd" type="Script" id=2]
+
+[node name="CanvasLayer" type="CanvasLayer"]
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+margin_left = 1.7818
+margin_right = 385.782
+margin_bottom = 128.0
+custom_fonts/normal_font = ExtResource( 1 )
+bbcode_enabled = true
+bbcode_text = "[wave]v0.1
+
+"
+text = "v0.1
+
+"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="."]
+margin_left = 459.545
+margin_top = 10.9277
+margin_right = 684.545
+margin_bottom = 63.9277
+custom_fonts/normal_font = ExtResource( 1 )
+bbcode_enabled = true
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
