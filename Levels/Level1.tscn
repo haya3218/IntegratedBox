@@ -80,8 +80,5 @@ texture = ExtResource( 10 )
 position = Vector2( 3840, -640 )
 texture = ExtResource( 11 )
 
-[node name="Area2D3" parent="." instance=ExtResource( 12 )]
-position = Vector2( 832, 160 )
-
 [node name="Area2D2" parent="." instance=ExtResource( 12 )]
 position = Vector2( 4192, -1248 )
