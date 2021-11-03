@@ -1,7 +1,8 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Scripts/Finish.gd" type="Script" id=1]
 [ext_resource path="res://Sprites/black.png" type="Texture" id=2]
+[ext_resource path="res://Sounds/finish.wav" type="AudioStream" id=3]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 32, 32 )
@@ -58,3 +59,8 @@ explosiveness = 0.3
 randomness = 0.42
 process_material = SubResource( 6 )
 texture = ExtResource( 2 )
+
+[node name="Timer" type="Timer" parent="."]
+
+[node name="Sound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 3 )

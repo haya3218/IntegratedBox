@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Scripts/Player.gd" type="Script" id=1]
 [ext_resource path="res://Sprites/player.png" type="Texture" id=2]
@@ -6,6 +6,8 @@
 [ext_resource path="res://Sprites/pillar1.png" type="Texture" id=4]
 [ext_resource path="res://Sprites/pillar2.png" type="Texture" id=5]
 [ext_resource path="res://Objects/Ghost.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Sounds/jump.wav" type="AudioStream" id=7]
+[ext_resource path="res://Sounds/dash.wav" type="AudioStream" id=8]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 16, 16 )
@@ -94,5 +96,11 @@ texture = ExtResource( 2 )
 
 [node name="DicordTimer" type="Timer" parent="."]
 autostart = true
+
+[node name="JumpSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 7 )
+
+[node name="DashSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 8 )
 
 [connection signal="body_entered" from="GroundC" to="." method="_on_ground_land"]

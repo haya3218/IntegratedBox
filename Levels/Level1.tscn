@@ -1,8 +1,8 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Objects/Tiles.tres" type="TileSet" id=1]
 [ext_resource path="res://Objects/Player.tscn" type="PackedScene" id=2]
-[ext_resource path="res://Scripts/Death.gd" type="Script" id=3]
+[ext_resource path="res://Objects/DeathPuddle.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Sprites/tutorial/3.png" type="Texture" id=4]
 [ext_resource path="res://Sprites/tutorial/0.png" type="Texture" id=5]
 [ext_resource path="res://Sprites/tutorial/1.png" type="Texture" id=6]
@@ -13,21 +13,12 @@
 [ext_resource path="res://Sprites/tutorial/troll1.png" type="Texture" id=11]
 [ext_resource path="res://Objects/Finish.tscn" type="PackedScene" id=12]
 
-[sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 4704, 608 )
-
 [node name="Level" type="Node2D"]
 
 [node name="Player" parent="." instance=ExtResource( 2 )]
 position = Vector2( 480, 320 )
 
-[node name="Area2D" type="Area2D" parent="."]
-position = Vector2( 576, 1504 )
-script = ExtResource( 3 )
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-position = Vector2( 1376, -160 )
-shape = SubResource( 1 )
+[node name="Area2D" parent="." instance=ExtResource( 3 )]
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -88,6 +79,9 @@ texture = ExtResource( 10 )
 [node name="troll2" type="Sprite" parent="Tutorial"]
 position = Vector2( 3840, -640 )
 texture = ExtResource( 11 )
+
+[node name="Area2D3" parent="." instance=ExtResource( 12 )]
+position = Vector2( 832, 160 )
 
 [node name="Area2D2" parent="." instance=ExtResource( 12 )]
 position = Vector2( 4192, -1248 )

@@ -30,19 +30,24 @@ var activities: Discord.ActivityManager
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	get_tree().set_auto_accept_quit(false)
 	# reset player died bool
 	$dash_timer.connect("timeout",self,"dash_timer_timeout")
 	globals.game_started = true
 	globals.player_died = false
+	globals.game_finished = false
 	$DicordTimer.connect("timeout",self,"discord_integ")
-	$DicordTimer.start(1)
+	$DicordTimer.start(0.2)
 	pass # Replace with function body.
 	
 func dash_timer_timeout():
 	is_dashing = false
 	
+func _exit_tree():
+	discord = null
+	
 func discord_integ():
-	if not discord:
+	if discord == null:
 		discord = Discord.Core.new()
 
 		var result: int = discord.create(
@@ -52,6 +57,7 @@ func discord_integ():
 
 		if result != Discord.Result.OK:
 			print("Failed to initialise SDK: ", result)
+			get_tree().quit()
 			discord = null
 			return
 
@@ -59,44 +65,69 @@ func discord_integ():
 
 		var activity := Discord.Activity.new()
 		activity.details = "Playing Box"
-		activity.state = "Trolling"
+		activity.state = "Level " + str(globals.cur_level)
 		activity.assets.large_image = "box"
 		activity.assets.large_text = "True!"
 		activities.update_activity(activity, self, "_update_activity_callback")
 	pass
 	
 func _update_activity_callback(result: int) -> void:
-	if globals.game_started:
+	if globals.game_started and discord != null:
 		if result != Discord.Result.OK:
 			print("Failed to update activity: ", result)
+			get_tree().quit()
 			return
 
 		print("Updated activity!")
 	
 func _process(delta):
-	if discord and not globals.player_died:
+	if discord != null and not globals.player_died:
 		var result: int = discord.run_callbacks()
 		if result != Discord.Result.OK:
 			print("Failed to run callbacks: ", result)
+			get_tree().quit()
 			discord = null
 			activities = null
+			
+func _notification(what):
+	if what == MainLoop.NOTIFICATION_WM_QUIT_REQUEST:
+		globals.player_died = true
+		get_tree().quit()
+	pass
 
 func _physics_process(delta):
 	
+	globals.velocity = velocity
+	
 	# Have gravity.
-	velocity.y += GRAVITY
+	if not globals.game_finished:
+		velocity.y += GRAVITY
+	else:
+		velocity.y = 0
+		velocity.x = 0
 	var is_friction = false
 	
 	# Movement.
-	if Input.is_action_pressed('ui_right') and not globals.player_died:
-		dir = 1
-		velocity.x = max(velocity.x+ACCELERATION, MAX_SPEED)
-	elif Input.is_action_pressed('ui_left') and not globals.player_died:
-		dir = -1
-		velocity.x = min(velocity.x-ACCELERATION, -MAX_SPEED)
+	if Input.is_action_pressed('ui_right'):
+		if not globals.player_died or not globals.game_finished:
+			dir = 1
+			velocity.x = max(velocity.x+ACCELERATION, MAX_SPEED)
+		else:
+			velocity.x = 0
+	elif Input.is_action_pressed('ui_left'):
+		if not globals.player_died or not globals.game_finished:
+			dir = -1
+			velocity.x = min(velocity.x-ACCELERATION, -MAX_SPEED)
+		else:
+			velocity.x = 0
 	else:
 		dir = 0
 		is_friction = true
+		
+	if Input.is_action_just_pressed("reset"):
+		globals.player_died = true
+		var left = Vector2(-2, 0)
+		Transitions.slide_rect2(self, '', 2, Color.black, left)
 		
 	if Input.is_action_pressed("ui_down"):
 		is_friction = true
@@ -123,6 +154,7 @@ func _physics_process(delta):
 			$Sprite/SpriteChild.rotation = deg2rad(new_rotation)
 			
 		if Input.is_action_pressed('ui_up'):
+			$JumpSound.play()
 			if  not wall_check():
 				$Sprite.scale = Vector2(0.5,1.5)
 			velocity.y = -JUMP_HEIGHT
@@ -188,6 +220,8 @@ func floor_check(delta):
 	
 func handle_dash(var delta):
 	if(Input.is_action_pressed("dash") and can_dash and !floor_check(delta)):
+		if not is_dashing:
+			$DashSound.play()
 		is_dashing = true
 		can_dash = false
 		dash_direction = get_direction_from_input()
@@ -215,13 +249,14 @@ func handle_dash(var delta):
 func _on_ground_land(body):
 	var rot = 0
 	if body.name != 'Player':
-		if not is_crouching and scale.x < 1.4:
+		if not is_crouching and scale.x < 1.5:
 			$Sprite.scale = Vector2(1.5, 0.5)
 	pass # Replace with function body.
 
 func apply_squash_squeeze():
-	$Sprite.scale.x = lerp($Sprite.scale.x,1,0.2)
-	$Sprite.scale.y = lerp($Sprite.scale.y,1,0.2)
+	if not globals.game_finished:
+		$Sprite.scale.x = lerp($Sprite.scale.x,1,0.2)
+		$Sprite.scale.y = lerp($Sprite.scale.y,1,0.2)
 	if not is_crouching:
 		scale.x = lerp(scale.x,1,0.2)
 		scale.y = lerp(scale.y,1,0.2)
