@@ -23,3 +23,7 @@ ___YOOOO___
 
 - gedehari 7/10
 
+# How to play dis?
+Go to [releases](https://github.com/haya3218/IntegratedBox/releases/) you fucking idiot.
+
+If you wanna play the `main` branch of the game, then you need to have Godot, scan and launch the project from there.
