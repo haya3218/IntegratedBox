@@ -11,6 +11,8 @@ _You're a box. Your only objective is to get to the haha funny black box and get
 
 _There's nothing much you can do about it. Hey, at least you can move._
 
+![box2](gif.gif)
+
 ___This game sucks___
 
 - IGN 0/10
