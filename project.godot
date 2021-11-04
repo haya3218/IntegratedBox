@@ -36,6 +36,10 @@ Transitions="*res://addons/godot_transitions/transitions.gd"
 globals="*res://Scripts/Global.gd"
 dicord="*res://discord_sdk/discord.gd"
 
+[debug]
+
+settings/fps/force_fps=45
+
 [display]
 
 window/size/width=640

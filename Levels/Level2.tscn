@@ -129,3 +129,53 @@ next_level = 1
 
 [node name="Area2D2" parent="." instance=ExtResource( 6 )]
 position = Vector2( 1408, 1504 )
+
+[node name="Node2D3" type="Node2D" parent="."]
+
+[node name="Area2D" parent="Node2D3" instance=ExtResource( 3 )]
+position = Vector2( 288, -448 )
+rotation = 1.5708
+
+[node name="Area2D2" parent="Node2D3" instance=ExtResource( 3 )]
+position = Vector2( 288, -480 )
+rotation = 1.5708
+
+[node name="Area2D3" parent="Node2D3" instance=ExtResource( 3 )]
+position = Vector2( 288, -512 )
+rotation = 1.5708
+
+[node name="Area2D4" parent="Node2D3" instance=ExtResource( 3 )]
+position = Vector2( 288, -544 )
+rotation = 1.5708
+
+[node name="Area2D5" parent="Node2D3" instance=ExtResource( 3 )]
+position = Vector2( 288, -576 )
+rotation = 1.5708
+
+[node name="Area2D6" parent="Node2D3" instance=ExtResource( 3 )]
+position = Vector2( 288, -608 )
+rotation = 1.5708
+
+[node name="Area2D7" parent="Node2D3" instance=ExtResource( 3 )]
+position = Vector2( 288, -640 )
+rotation = 1.5708
+
+[node name="Area2D8" parent="Node2D3" instance=ExtResource( 3 )]
+position = Vector2( 288, -672 )
+rotation = 1.5708
+
+[node name="Area2D9" parent="Node2D3" instance=ExtResource( 3 )]
+position = Vector2( 288, -704 )
+rotation = 1.5708
+
+[node name="Area2D10" parent="Node2D3" instance=ExtResource( 3 )]
+position = Vector2( 288, -736 )
+rotation = 1.5708
+
+[node name="Area2D11" parent="Node2D3" instance=ExtResource( 3 )]
+position = Vector2( 288, -768 )
+rotation = 1.5708
+
+[node name="Area2D12" parent="Node2D3" instance=ExtResource( 3 )]
+position = Vector2( 288, -800 )
+rotation = 1.5708

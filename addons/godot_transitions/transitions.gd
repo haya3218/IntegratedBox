@@ -5,6 +5,7 @@ const ZigZagOverlay = preload("res://addons/godot_transitions/scenes/ZigZagOverl
 const StripesHorizontal = preload("res://addons/godot_transitions/scenes/StripesHorizontal.tscn")
 const Sector = preload("res://addons/godot_transitions/scenes/Sector.tscn")
 const Donut = preload("res://addons/godot_transitions/scenes/Donut.tscn")
+onready var shaderLMAO = preload("res://Shaders/NTSC.tres")
 
 var SCREEN: Dictionary = {
 	"width" :ProjectSettings.get("display/window/size/width"),
@@ -160,12 +161,16 @@ func slide_rect(from, to, duration: float, color: Color, dir: Vector2) -> void:
 	
 func slide_rect2(from, to, duration: float, color: Color, dir: Vector2, pause = false) -> void:
 	var controlRoot = CanvasLayer.new()
+	var colorRect = ColorRect.new()
+	colorRect.material = shaderLMAO
+	
 	var overlay = ZigZagOverlay.instance()
 	var tween = Tween.new()
 	controlRoot.set_pause_mode(PAUSE_MODE_PROCESS)
 	
 	get_tree().get_root().add_child(controlRoot)
 	controlRoot.add_child(overlay)
+	# controlRoot.add_child(colorRect)
 	overlay.color = color
 	overlay.global_position = Vector2(0, 0)
 	controlRoot.add_child(tween)

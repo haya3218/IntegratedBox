@@ -1,7 +1,10 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Objects/ScoreFont.tres" type="BitmapFont" id=1]
 [ext_resource path="res://Scripts/Timer.gd" type="Script" id=2]
+[ext_resource path="res://Shaders/LDis.tres" type="Material" id=3]
+[ext_resource path="res://Shaders/Sharp.tres" type="Material" id=4]
+[ext_resource path="res://Shaders/NTSC.tres" type="Material" id=5]
 
 [node name="CanvasLayer" type="CanvasLayer"]
 
@@ -29,6 +32,30 @@ margin_bottom = 63.9277
 custom_fonts/normal_font = ExtResource( 1 )
 bbcode_enabled = true
 script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect2" type="ColorRect" parent="."]
+material = ExtResource( 4 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect" type="ColorRect" parent="."]
+material = ExtResource( 3 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect3" type="ColorRect" parent="."]
+material = ExtResource( 5 )
+anchor_right = 1.0
+anchor_bottom = 1.0
 __meta__ = {
 "_edit_use_anchors_": false
 }

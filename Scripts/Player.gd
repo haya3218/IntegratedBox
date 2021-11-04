@@ -86,6 +86,7 @@ func _process(delta):
 		var f = finish.instance()
 		f.position = position + 100 * Vector2.UP
 		get_parent().add_child(f)
+	print(Engine.get_frames_per_second())
 	if discord != null and not globals.player_died:
 		var result: int = discord.run_callbacks()
 		if result != Discord.Result.OK:

@@ -1,12 +1,19 @@
 extends Area2D
 
 var CorrectSound = preload("res://Sounds/death.wav")
+var explod = preload("res://Sounds/explod.wav")
+onready var explos = preload("res://Objects/Explosion.tscn")
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
+var honor = false
 
-
+func _ready():
+	honor = false
+	$Timer.connect("timeout",self,"shit")
+	pass
+	
+func shit():
+	honor = false
+	
 func _physics_process(delta):
 	var bodies = get_overlapping_bodies()
 	for body in bodies:
@@ -43,13 +50,34 @@ func _physics_process(delta):
 
 				# Here you can set the 'rigid_body' variables from the script.
 				rigid_body.blocks_per_side = 2
-				rigid_body.blocks_impulse = 10
-				rigid_body.explosion_delay = true
+				rigid_body.blocks_impulse = 0
+				# rigid_body.explosion_delay = true
+				
+				var random_dir = pow(-1, randi() % 10)
+				
+				if random_dir == 1:
+					var e = explos.instance()
+					e.global_position = body.global_position
+					e.get_node(@"AnimationPlayer").play('Explode')
+					node.add_child(e, true)
+					rigid_body.apply_impulse(Vector2(), Vector2(randf(), randf()))
+					deathsound.stream = explod
+					deathsound.play()
+					honor = true
+					$Timer.start(0.5)
 				
 				print(rigid_body)
 
 				node.add_child(rigid_body, true)
+				var left = Vector2(-2, 0)
+				Transitions.slide_rect2(self, '', 2.5, Color.black, left)
 			globals.player_died = true
-			var left = Vector2(-2, 0)
-			Transitions.slide_rect2(self, '', 2.5, Color.black, left)
+			
+	if honor:
+		for body in bodies:
+			if body.name == 'Player':
+				body.get_node(@"Camera2D").set_offset(Vector2( \
+					rand_range(-1.0, 1.0) * 3, \
+					rand_range(-1.0, 1.0) * 3 \
+				))
 	pass
