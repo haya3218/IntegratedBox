@@ -18,3 +18,5 @@ position = Vector2( 16.2757, 21.888 )
 shape = SubResource( 1 )
 
 [node name="Timer" type="Timer" parent="."]
+
+[node name="Timer2" type="Timer" parent="."]

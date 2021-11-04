@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Objects/Tiles.tres" type="TileSet" id=1]
 [ext_resource path="res://Objects/Player.tscn" type="PackedScene" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://Objects/Finish.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Objects/Layer.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Objects/DeathPuddle.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Sprites/tutorial/troll3.png" type="Texture" id=7]
 
 [node name="Level" type="Node2D"]
 
@@ -179,3 +180,7 @@ rotation = 1.5708
 [node name="Area2D12" parent="Node2D3" instance=ExtResource( 3 )]
 position = Vector2( 288, -800 )
 rotation = 1.5708
+
+[node name="troll3" type="Sprite" parent="."]
+position = Vector2( 800, 288 )
+texture = ExtResource( 7 )

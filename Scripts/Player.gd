@@ -38,6 +38,7 @@ func _ready():
 	globals.game_started = true
 	globals.player_died = false
 	globals.game_finished = false
+	globals.death_reason = 0
 	$DicordTimer.connect("timeout",self,"discord_integ")
 	$DicordTimer.start(0.5)
 	pass # Replace with function body.
@@ -86,6 +87,7 @@ func _process(delta):
 		var f = finish.instance()
 		f.position = position + 100 * Vector2.UP
 		get_parent().add_child(f)
+		f.next_level = globals.cur_level + 1
 	print(Engine.get_frames_per_second())
 	if discord != null and not globals.player_died:
 		var result: int = discord.run_callbacks()
@@ -103,73 +105,54 @@ func _notification(what):
 
 func _physics_process(delta):
 	
-	globals.velocity = velocity
-	
-	# Have gravity.
-	if not globals.game_finished:
-		velocity.y += GRAVITY
-	else:
-		velocity.y = 0
-		velocity.x = 0
-	var is_friction = false
-	
-	# Movement.
-	if Input.is_action_pressed('ui_right'):
-		if not globals.player_died:
-			dir = 1
-			velocity.x = max(velocity.x+ACCELERATION, MAX_SPEED)
-		else:
-			velocity.x = 0
-	elif Input.is_action_pressed('ui_left'):
-		if not globals.player_died:
-			dir = -1
-			velocity.x = min(velocity.x-ACCELERATION, -MAX_SPEED)
-		else:
-			velocity.x = 0
-	else:
-		dir = 0
-		is_friction = true
+	if not globals.player_died or globals.death_reason == 1:
+		globals.velocity = velocity
 		
-	if Input.is_action_just_pressed("reset"):
-		globals.player_died = true
-		var left = Vector2(-2, 0)
-		Transitions.slide_rect2(self, '', 2, Color.black, left)
+		# Have gravity.
+		if not globals.game_finished:
+			velocity.y += GRAVITY
+		else:
+			velocity.y = 0
+			velocity.x = 0
+		var is_friction = false
 		
-	if Input.is_action_pressed("ui_down"):
-		is_friction = true
-		is_crouching = true
-		scale.x = lerp(scale.x, 1.5, .3)
-		scale.y = lerp(scale.y, 0.5, .3)
-	elif Input.is_action_just_released("ui_down"):
-		if dir != 0:
+		# Movement.
+		if Input.is_action_pressed('ui_right'):
+			if not globals.player_died:
+				dir = 1
+				velocity.x = max(velocity.x+ACCELERATION, MAX_SPEED)
+			else:
+				velocity.x = 0
+		elif Input.is_action_pressed('ui_left'):
+			if not globals.player_died:
+				dir = -1
+				velocity.x = min(velocity.x-ACCELERATION, -MAX_SPEED)
+			else:
+				velocity.x = 0
+		else:
+			dir = 0
 			is_friction = true
-		is_crouching = false
-		
-	var collision = test_move(transform, velocity * delta)
-	if floor_check(delta) and not globals.player_died:
-		can_dash = true
-		
-	if floor_check(delta) and not globals.player_died:
-		var current_rotate = modulo(rad2deg($Sprite/SpriteChild.rotation), 360)
-		var current_right_rotate = modulo(current_rotate, 90)
-
-		var diff = current_rotate - current_right_rotate
-		var new_rotation = diff + 90
-
-		if not round(current_rotate) == diff:
-			$Sprite/SpriteChild.rotation = deg2rad(new_rotation)
 			
-		if Input.is_action_pressed('ui_up'):
-			$JumpSound.play()
-			if  not wall_check():
-				$Sprite.scale = Vector2(0.5,1.5)
-			velocity.y = -JUMP_HEIGHT
-		if is_friction:
-			velocity.x = lerp(velocity.x, 0, .1)
-	else:
-		if (not wall_check() or velocity.y < 50) and not is_crouching:
-			$Sprite/SpriteChild.rotation_degrees += 5
-		else:
+		if Input.is_action_just_pressed("reset"):
+			globals.player_died = true
+			var left = Vector2(-2, 0)
+			Transitions.slide_rect2(self, '', 2, Color.black, left)
+			
+		if Input.is_action_pressed("ui_down"):
+			is_friction = true
+			is_crouching = true
+			scale.x = lerp(scale.x, 1.5, .3)
+			scale.y = lerp(scale.y, 0.5, .3)
+		elif Input.is_action_just_released("ui_down"):
+			if dir != 0:
+				is_friction = true
+			is_crouching = false
+			
+		var collision = test_move(transform, velocity * delta)
+		if floor_check(delta) and not globals.player_died:
+			can_dash = true
+			
+		if floor_check(delta) and not globals.player_died:
 			var current_rotate = modulo(rad2deg($Sprite/SpriteChild.rotation), 360)
 			var current_right_rotate = modulo(current_rotate, 90)
 
@@ -178,25 +161,48 @@ func _physics_process(delta):
 
 			if not round(current_rotate) == diff:
 				$Sprite/SpriteChild.rotation = deg2rad(new_rotation)
-		if is_friction:
-			velocity.x = lerp(velocity.x, 0, .1)
-			
-	if wall_check() and velocity.y > 50 and not globals.player_died:
-		velocity.y = 50
-			
-	# print(is_dashing)
-	
-	handle_dash(delta)
+				
+			if Input.is_action_pressed('ui_up'):
+				$JumpSound.play()
+				if  not wall_check():
+					$Sprite.scale = Vector2(0.5,1.5)
+				velocity.y = -JUMP_HEIGHT
+			if is_friction:
+				velocity.x = lerp(velocity.x, 0, .1)
+		else:
+			if (not wall_check() or velocity.y < 50) and not is_crouching:
+				$Sprite/SpriteChild.rotation_degrees += 5
+			else:
+				var current_rotate = modulo(rad2deg($Sprite/SpriteChild.rotation), 360)
+				var current_right_rotate = modulo(current_rotate, 90)
+
+				var diff = current_rotate - current_right_rotate
+				var new_rotation = diff + 90
+
+				if not round(current_rotate) == diff:
+					$Sprite/SpriteChild.rotation = deg2rad(new_rotation)
+			if is_friction:
+				velocity.x = lerp(velocity.x, 0, .1)
+				
+		if wall_check() and velocity.y > 50 and not globals.player_died:
+			velocity.y = 50
+				
+		# print(is_dashing)
 		
-	# Final movement.
-	if (!is_dashing):
-		velocity = move_and_slide(velocity, UP)
+		handle_dash(delta)
+			
+		# Final movement.
+		if (!is_dashing):
+			velocity = move_and_slide(velocity, UP)
+		else:
+			velocity = move_and_slide(dash_direction,UP)
+		# test_move(transform, velocity)
+		pass
+		
+		apply_squash_squeeze()
 	else:
-		velocity = move_and_slide(dash_direction,UP)
-	# test_move(transform, velocity)
-	pass
-	
-	apply_squash_squeeze()
+		velocity = Vector2()
+		move_and_slide(Vector2())
 
 func wall_check():
 	# print($WallCheck1.is_colliding())

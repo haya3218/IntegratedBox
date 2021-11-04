@@ -5,20 +5,30 @@ var explod = preload("res://Sounds/explod.wav")
 onready var explos = preload("res://Objects/Explosion.tscn")
 
 var honor = false
+var last_position = Vector2()
 
 func _ready():
+	last_position = Vector2()
 	honor = false
 	$Timer.connect("timeout",self,"shit")
+	$Timer2.connect("timeout",self,"shit2")
 	pass
 	
 func shit():
 	honor = false
+	
+func shit2():
+	var bodies = get_overlapping_bodies()
+	for body in bodies:
+		if body.name == 'Player':
+			body.get_node(@"CollisionShape2D").queue_free()
 	
 func _physics_process(delta):
 	var bodies = get_overlapping_bodies()
 	for body in bodies:
 		if body.name == 'Player':
 			if not globals.player_died:
+				$Timer2.start(0.15)
 				body.modulate.a = 0
 				var deathsound = AudioStreamPlayer2D.new()
 				add_child(deathsound)
@@ -67,11 +77,16 @@ func _physics_process(delta):
 					$Timer.start(0.5)
 				
 				print(rigid_body)
+				
+				last_position = body.global_position
+				
+				globals.death_reason = 0
 
 				node.add_child(rigid_body, true)
 				var left = Vector2(-2, 0)
 				Transitions.slide_rect2(self, '', 2.5, Color.black, left)
 			globals.player_died = true
+			# body.global_position = last_position
 			
 	if honor:
 		for body in bodies:
